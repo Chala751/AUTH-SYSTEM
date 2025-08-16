@@ -32,7 +32,7 @@ export const register = async (req, res) => {
         // Send welcome email
         const mailOptions = {
             from: process.env.SENDER_EMAIL,
-            to: user.email,
+            to:email,
             subject: 'Welcome to Our Service',
             text: `Hello ${user.name},\n\nThank you for registering!`
         }
@@ -81,5 +81,36 @@ export const logout = async (req, res) => {
         return res.json({ success: true, message: 'User logged out successfully' })
     } catch (error) {
         return res.json({ success: false, message: error.message })
+    }
+}
+
+//send verfication otp to users email
+export const sendVerfyOtp =async(req,res)=>{
+    try {
+        const {userID}=req.body
+
+        const user =await userModel.findById(userID)
+
+        if (user.isAccountVreified) {
+            return res.json({success: false, message:"account already verified"})
+        }
+        const otp = Math.floor(100000 + Math.random() * 900000)
+
+        user.verifyOtp = otp
+        user.verifyOtpExpireAt=Date.now()+24*60*60*1000
+
+        await user.save()
+
+        const mailOption = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: 'Account Verification OTP',
+            text: `Your OTP for account verification is ${otp}. It is valid for 24 hours.`
+        }
+
+        await transporter.sendMail(mailOption)
+        res.json({success:true, message:'Verivication OTP Sent on email'})
+    } catch (error) {
+        res.json({success:false, message:error.message})
     }
 }
