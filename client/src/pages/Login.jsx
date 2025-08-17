@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Mail, Lock, User } from "lucide-react"; 
+import  {useNavigate} from "react-router-dom";
 
 
 const Login = () => {
@@ -8,6 +9,8 @@ const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
@@ -66,9 +69,9 @@ const Login = () => {
         {/* Forgot password */}
         {state !== "Sign Up" && (
           <div className="mt-3 text-right">
-            <a className="text-sm text-indigo-500 hover:underline" href="#">
+            <p onClick={() => navigate("/reset-password")} className="text-sm text-indigo-500 hover:underline cursor-pointer" >
               Forgot password?
-            </a>
+            </p>
           </div>
         )}
 
