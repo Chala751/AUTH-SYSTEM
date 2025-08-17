@@ -10,7 +10,9 @@ const app = express()
 const port = process.env.PORT || 4000
 connectDB()
 
-app.use(cors({credentials:true}))
+const allowedOrigins = ['http://localhost:5173', 'http://your-production-url.com']
+
+app.use(cors({credentials:true, origin:allowedOrigins}))
 app.use(express.json())
 app.use(cookieParser())
 
