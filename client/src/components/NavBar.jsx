@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 const NavBar = () => {
@@ -8,6 +9,8 @@ const NavBar = () => {
         { name: 'Contact', path: '/' },
         { name: 'About', path: '/' },
     ];
+
+    const navigate = useNavigate();
 
     const ref = React.useRef(null)
 
@@ -49,7 +52,7 @@ const NavBar = () => {
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    <button className={`px-8 py-2.5 rounded-full ml-4 transition-all duration-500 ${isScrolled ? "text-white bg-black" : "bg-white text-black"} cursor-pointer`}>
+                    <button onClick={() => navigate('/login')} className={`px-8 py-2.5 rounded-full ml-4 transition-all duration-500 ${isScrolled ? "text-white bg-black" : "bg-white text-black"} cursor-pointer`}>
                         Login
                     </button>
                 </div>
