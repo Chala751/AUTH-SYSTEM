@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState ,useContext} from "react";
 import { Mail, Lock, User } from "lucide-react"; 
 import  {useNavigate} from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 
 const Login = () => {
@@ -11,6 +12,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+
+  const { backendUrl, isLoggedIn, setIsLoggedIn, userData, setUserData } = useContext(AppContext);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
