@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useContext,useEffect }  from "react";
+import { AppContext } from "../context/AppContext";
 
 const Header = () => {
+    const { userData , getUserData } = useContext(AppContext);
+    
+    useEffect(() => {
+    getUserData();
+  }, []);
   return (
     <div className="h-[580px] flex flex-col items-center justify-center px-4 text-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
       {/* Announcement badge */}
       <div className="flex flex-wrap items-center justify-center gap-2.5 mb-6 border border-white/30 rounded-full bg-white/10 pl-4 p-1 text-sm max-w-full backdrop-blur-sm">
-        <p>🚀 Launching our new platform update.</p>
+        <p>Hey {userData?.name || "there"}  🚀 Launching our new platform update.</p>
         <div className="flex items-center cursor-pointer gap-2 bg-white text-indigo-600 font-medium border border-gray-200 rounded-2xl px-3 py-1 shadow-sm hover:shadow-md transition">
           <p>Explore</p>
           <svg

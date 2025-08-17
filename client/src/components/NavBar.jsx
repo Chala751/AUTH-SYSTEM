@@ -112,6 +112,7 @@ const NavBar = () => {
         >
           <button
             className="absolute top-4 right-4"
+            
             onClick={() => setIsMenuOpen(false)}
           >
             <svg
@@ -137,7 +138,7 @@ const NavBar = () => {
             </a>
           ))}
 
-          <button className="bg-white text-indigo-600 px-8 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition">
+          <button onClick={() => navigate("/login")} className="bg-white text-indigo-600 px-8 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition">
             Login
           </button>
         </div>

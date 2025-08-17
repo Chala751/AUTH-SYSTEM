@@ -15,7 +15,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const { backendUrl, isLoggedIn, setIsLoggedIn, userData, setUserData } = useContext(AppContext);
+  const { backendUrl, isLoggedIn, setIsLoggedIn, userData, setUserData ,getUserData} = useContext(AppContext);
 
   const onSubmitHandler = async (e) => {
     try {
@@ -29,6 +29,7 @@ const Login = () => {
         });
         if (data.success ) {
           setIsLoggedIn(true);
+          getUserData();
           navigate("/");
         }else{
           toast.error(data.message);
@@ -40,6 +41,7 @@ const Login = () => {
         });
         if (data.success ) {
           setIsLoggedIn(true);
+          getUserData();
           navigate("/");
         }else{
           toast.error(data.message);
