@@ -98,7 +98,7 @@ export const AppProvider = ({ children }) => {
 
   const sendVerifyOtp = async () => {
     try {
-      const { data } = await api.post("/api/auth/send-verify-otp");
+      const { data } = await api.post("/api/auth/send-verify-otp", {}, { withCredentials: true });
       data.success ? toast.success("OTP sent to your email") : toast.error(data.message);
       return data.success;
     } catch (err) {

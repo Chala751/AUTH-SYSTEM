@@ -85,35 +85,39 @@ export const logout = async (req, res) => {
 }
 
 //send verfication otp to users email
-export const sendVerifyOtp =async(req,res)=>{
-    try {
-        const {userID}=req.body
+export const sendVerifyOtp = async (req, res) => {
+  try {
+    const userID = req.userId; // <-- get userId from middleware
+    const user = await userModel.findById(userID);
 
-        const user =await userModel.findById(userID)
+    if (!user) return res.json({ success: false, message: "User not found" });
 
-        if (user.isAccountVerified) {
-            return res.json({success: false, message:"account already verified"})
-        }
-        const otp = Math.floor(100000 + Math.random() * 900000)
-
-        user.verifyOtp = otp
-        user.verifyOtpExpireAt=Date.now()+24*60*60*1000
-
-        await user.save()
-
-        const mailOption = {
-            from: process.env.SENDER_EMAIL,
-            to: user.email,
-            subject: 'Account Verification OTP',
-            text: `Your OTP for account verification is ${otp}. It is valid for 24 hours.`
-        }
-
-        await transporter.sendMail(mailOption)
-        res.json({success:true, message:'Verivication OTP Sent on email'})
-    } catch (error) {
-        res.json({success:false, message:error.message})
+    if (user.isAccountVerified) {
+      return res.json({ success: false, message: "Account already verified" });
     }
-}
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    user.verifyOtp = otp;
+    user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
+
+    await user.save();
+
+    const mailOption = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Account Verification OTP",
+      text: `Your OTP is ${otp}, valid for 24 hours.`,
+    };
+
+    await transporter.sendMail(mailOption);
+
+    res.json({ success: true, message: "Verification OTP sent to your email" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
 
 export const verifyEmail = async (req, res) => {
     const { userID, otp } = req.body
