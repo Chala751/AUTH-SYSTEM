@@ -1,11 +1,17 @@
 import React, { useState } from "react";
-import { Mail, Lock, User } from "lucide-react"; // Added User icon
+import { Mail, Lock, User } from "lucide-react"; 
+
 
 const Login = () => {
   const [state, setState] = useState("Sign Up");
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+      
       <form className="max-w-md w-full text-center border border-gray-200 rounded-2xl p-8 bg-white shadow-xl">
         <h1 className="text-gray-900 text-3xl font-semibold">
           {state === "Sign Up" ? "Create Account" : "Login"}
@@ -23,6 +29,8 @@ const Login = () => {
             <input
               type="text"
               placeholder="Full Name"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
               className="bg-transparent text-gray-700 placeholder-gray-400 outline-none text-sm w-full h-full"
               required
             />
@@ -35,6 +43,8 @@ const Login = () => {
           <input
             type="email"
             placeholder="Email address"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             className="bg-transparent text-gray-700 placeholder-gray-400 outline-none text-sm w-full h-full"
             required
           />
@@ -46,6 +56,8 @@ const Login = () => {
           <input
             type="password"
             placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
             className="bg-transparent text-gray-700 placeholder-gray-400 outline-none text-sm w-full h-full"
             required
           />
