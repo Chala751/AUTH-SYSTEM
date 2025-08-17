@@ -120,39 +120,39 @@ export const sendVerifyOtp = async (req, res) => {
 
 
 export const verifyEmail = async (req, res) => {
-    const { userID, otp } = req.body
+  const { otp } = req.body; // only otp from frontend
+  const userID = req.userId; // get from middleware
 
-    if (!userID || !otp) {
-        return res.json({ success: false, message: 'All fields are required' })
+  if (!otp) {
+    return res.json({ success: false, message: 'OTP is required' });
+  }
+
+  try {
+    const user = await userModel.findById(userID);
+    if (!user) {
+      return res.json({ success: false, message: 'User not found' });
     }
 
-    try {
-        
-        const user = await userModel.findById(userID)
-
-        if (!user) {
-            return res.json({ success: false, message: 'User not found' })
-        }
-
-        if (user.verifyOtp === '' || user.verifyOtp !== otp) {
-            return res.json({ success: false, message: 'Invalid OTP' })
-        }
-
-        if (user.verifyOtpExpireAt < Date.now()) {
-            return res.json({ success: false, message: 'OTP expired' })
-        }
-
-        user.isAccountVerified = true
-        user.verifyOtp = ''
-        user.verifyOtpExpireAt = 0
-
-        await user.save()
-
-        res.json({ success: true, message: 'Account verified successfully' })
-    } catch (error) {
-        res.json({ success: false, message: error.message })
+    if (user.verifyOtp === '' || user.verifyOtp !== otp) {
+      return res.json({ success: false, message: 'Invalid OTP' });
     }
-}
+
+    if (user.verifyOtpExpireAt < Date.now()) {
+      return res.json({ success: false, message: 'OTP expired' });
+    }
+
+    user.isAccountVerified = true;
+    user.verifyOtp = '';
+    user.verifyOtpExpireAt = 0;
+
+    await user.save();
+
+    res.json({ success: true, message: 'Account verified successfully' });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
 
 //check if the user is authenticated
 export const isAuthenticated = async (req, res, next) => {

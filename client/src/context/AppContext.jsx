@@ -108,20 +108,19 @@ export const AppProvider = ({ children }) => {
   };
 
   const verifyEmail = async (otp) => {
-    try {
-      const { data } = await api.post("/api/auth/verify-account", { otp });
-      if (data.success) {
-        toast.success("Email verified");
-        await getUserData();
-        return true;
-      }
-      toast.error(data.message);
-      return false;
-    } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
-      return false;
-    }
-  };
+  try {
+    const { data } = await api.post(
+      "/api/auth/verify-email",
+      { otp },
+      { withCredentials: true } // important for sending JWT cookie
+    );
+    data.success ? toast.success(data.message) : toast.error(data.message);
+    return data.success;
+  } catch (err) {
+    toast.error(err.response?.data?.message || err.message);
+    return false;
+  }
+};
 
   const sendResetOtp = async (email) => {
     try {

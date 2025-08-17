@@ -1,10 +1,12 @@
 // src/pages/EmailVerify.jsx
 import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 
 const EmailVerify = () => {
   const { userData, sendVerifyOtp, verifyEmail } = useContext(AppContext);
   const [otp, setOtp] = useState("");
+  const navigate = useNavigate(); // <-- hook for navigation
 
   if (!userData) {
     return (
@@ -16,6 +18,14 @@ const EmailVerify = () => {
       </div>
     );
   }
+
+  const handleVerifyEmail = async () => {
+    const ok = await verifyEmail(otp);
+    if (ok) {
+      setOtp("");
+      navigate("/"); // <-- redirect to home page
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-4">
@@ -55,10 +65,7 @@ const EmailVerify = () => {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               <button
-                onClick={async () => {
-                  const ok = await verifyEmail(otp);
-                  if (ok) setOtp("");
-                }}
+                onClick={handleVerifyEmail} // <-- use handler
                 className="mt-4 w-full px-4 py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition duration-200 cursor-pointer"
               >
                 Verify Email
