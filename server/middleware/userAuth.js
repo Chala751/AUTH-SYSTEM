@@ -1,24 +1,23 @@
+// middleware/userAuth.js
 import jwt from 'jsonwebtoken';
 
- const userAuth = (req, res, next) => {
-    const { token } = req.cookies
-
+const userAuth = (req, res, next) => {
+  try {
+    const { token } = req.cookies || {};
     if (!token) {
-        return res.json({ success: false, message: 'Unauthorized Login Again' })
+      return res.json({ success: false, message: 'Unauthorized. Please log in again.' });
     }
 
-    try {
-        const tokenDecode = jwt.verify(token, process.env.JWT_SECRET)
-        req.user = tokenDecode
-        if (tokenDecode.id) {
-            req.body.userId = tokenDecode.id
-        } else {
-            return res.json({ success: false, message: 'Unauthorized Login Again' })
-        }
-        next()
-    } catch (error) {
-        return res.json({ success: false, message:error.message })
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded?.id) {
+      return res.json({ success: false, message: 'Unauthorized. Invalid token.' });
     }
-}
 
-export default userAuth
+    req.userId = decoded.id; // <-- use this everywhere in controllers
+    next();
+  } catch (error) {
+    return res.json({ success: false, message: error.message || 'Unauthorized' });
+  }
+};
+
+export default userAuth;

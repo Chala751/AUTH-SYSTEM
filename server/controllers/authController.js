@@ -85,13 +85,13 @@ export const logout = async (req, res) => {
 }
 
 //send verfication otp to users email
-export const sendVerfyOtp =async(req,res)=>{
+export const sendVerifyOtp =async(req,res)=>{
     try {
         const {userID}=req.body
 
         const user =await userModel.findById(userID)
 
-        if (user.isAccountVreified) {
+        if (user.isAccountVerified) {
             return res.json({success: false, message:"account already verified"})
         }
         const otp = Math.floor(100000 + Math.random() * 900000)
@@ -219,7 +219,7 @@ export const resetPassword = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(newPassword, 10)
 
-        user.password = hPassword
+        user.password = hashedPassword
         user.resetOtp = ''
         user.resetOtpExpireAt = 0
 

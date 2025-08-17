@@ -1,5 +1,6 @@
-import React from "react";
+import React,{useContext} from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const NavBar = () => {
   const navLinks = [
@@ -8,6 +9,8 @@ const NavBar = () => {
     { name: "Contact", path: "/" },
     { name: "About", path: "/" },
   ];
+
+  const { userData, backendUrl,setUserData,setIsLoggedin } = useContext(AppContext);
 
   const navigate = useNavigate();
   const ref = React.useRef(null);
@@ -78,12 +81,20 @@ const NavBar = () => {
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
+          {userData ? 
+          <div>{userData.name[0].toUpperCase()}
+          <div><ul>
+              <li>Verify email</li>
+              <li>Logout</li>
+            </ul></div>
+          </div>
+          :
           <button
             onClick={() => navigate("/login")}
             className={`px-6 py-2.5 rounded-full font-medium shadow-md hover:shadow-lg transition cupo cursor-pointer`}
           >
             Login
-          </button>
+          </button>}
         </div>
 
         {/* Mobile Menu Button */}
@@ -138,9 +149,18 @@ const NavBar = () => {
             </a>
           ))}
 
+          {userData ? 
+          <div>{userData.name[0].toUpperCase()}
+            <div><ul>
+                <li>Verify email</li>
+                <li>Logout</li>
+              </ul></div>
+          </div>
+          :
+
           <button onClick={() => navigate("/login")} className="bg-white text-indigo-600 px-8 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition">
             Login
-          </button>
+          </button>}
         </div>
       </nav>
     </div>
