@@ -2,6 +2,8 @@ import React, { useState ,useContext} from "react";
 import { Mail, Lock, User } from "lucide-react"; 
 import  {useNavigate} from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 
 const Login = () => {
@@ -15,10 +17,43 @@ const Login = () => {
 
   const { backendUrl, isLoggedIn, setIsLoggedIn, userData, setUserData } = useContext(AppContext);
 
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      axios.defaults.withCredentials = true;
+      if (state === "Sign Up") {
+        const {data} = await axios.post(backendUrl+'/api/auth/register', {
+          name,
+          email,
+          password
+        });
+        if (data.success ) {
+          setIsLoggedIn(true);
+          navigate("/");
+        }else{
+          toast.error(data.message);
+        }
+      }else{
+        const {data} = await axios.post(backendUrl+'/api/auth/login', {
+          email,
+          password
+        });
+        if (data.success ) {
+          setIsLoggedIn(true);
+          navigate("/");
+        }else{
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+       toast.error(error.message);
+    }
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-      
-      <form className="max-w-md w-full text-center border border-gray-200 rounded-2xl p-8 bg-white shadow-xl">
+
+      <form onSubmit={onSubmitHandler} className="max-w-md w-full text-center border border-gray-200 rounded-2xl p-8 bg-white shadow-xl">
         <h1 className="text-gray-900 text-3xl font-semibold">
           {state === "Sign Up" ? "Create Account" : "Login"}
         </h1>
